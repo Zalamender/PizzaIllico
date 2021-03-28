@@ -4,13 +4,12 @@ using Xamarin.Forms.Xaml;
 namespace PizzaIllico.Mobile.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class EditUserPage
+    public partial class HistoryPage
     {
-        public EditUserPage()
+        public HistoryPage()
         {
-            BindingContext = new EditUserViewModel();
+            BindingContext = new HistoryViewModel();
             InitializeComponent();
-            
         }
     }
 }

@@ -3,17 +3,12 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:forms="clr-namespace:Storm.Mvvm.Forms;assembly=Storm.Mvvm.Forms"
                        xmlns:viewModels="clr-namespace:PizzaIllico.Mobile.ViewModels;assembly=PizzaIllico.Mobile"
- 
                        x:Class="PizzaIllico.Mobile.Pages.RegisterPage"
                        x:DataType="viewModels:RegisterViewModel"
-                       Title="Login">
-    <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness">
-            <On Platform="iOS, Android" Value="0,40,0,0"/>
-        </OnPlatform>
-    </ContentPage.Padding>
+                       Title="Inscription">
+    
     <ContentPage.Content>
-        <Grid Padding="30" RowSpacing="10" VerticalOptions="CenterAndExpand"
+        <Grid Padding="10" RowSpacing="15" VerticalOptions="CenterAndExpand"
             HorizontalOptions = "CenterAndExpand">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -21,32 +16,26 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <BoxView HeightRequest="10"/>
-            </Grid>
-            <Grid Grid.Row="1">
-            </Grid>
-            <Grid Grid.Row="2" WidthRequest="500">
+            <Grid Grid.Row="1" WidthRequest="500">
                 <Frame HasShadow="True" BorderColor="DarkBlue">
                     <StackLayout Orientation="Vertical" Spacing="10">
-                        <Entry x:Name="Email" Text="{Binding Email}" TextColor="DarkBlue" Placeholder="Email"
+                        <Entry x:Name="Email" Text="{Binding Email}" TextColor="DarkBlue" Placeholder="E-mail"
                                PlaceholderColor="black"/>
-                        <Entry x:Name="FirstName" Text="{Binding FirstName}" TextColor="DarkBlue" Placeholder="FirstName"
+                        <Entry x:Name="FirstName" Text="{Binding FirstName}" TextColor="DarkBlue" Placeholder="Prénom"
                                PlaceholderColor="Black"/>
-                        <Entry x:Name="LastName" Text="{Binding LastName}" TextColor="DarkBlue" Placeholder="LastName"
+                        <Entry x:Name="LastName" Text="{Binding LastName}" TextColor="DarkBlue" Placeholder="Nom de famille"
                                PlaceholderColor="Black"/>
-                        <Entry x:Name="PhoneNumber" Text="{Binding PhoneNumber}" TextColor="DarkBlue" Placeholder="PhoneNumber"
+                        <Entry x:Name="PhoneNumber" Text="{Binding PhoneNumber}" TextColor="DarkBlue" Placeholder="Numéro de téléphone"
                                PlaceholderColor="Black"/>
-                        <Entry x:Name="Password" Text="{Binding Password}" TextColor="DarkBlue" Placeholder="Password"
+                        <Entry x:Name="Password" Text="{Binding Password}" TextColor="DarkBlue" Placeholder="Mot de passe"
                                PlaceholderColor="Black" HeightRequest="40"
                                IsPassword="True"/>
                     </StackLayout>
                 </Frame>
             </Grid>
             <Grid Grid.Row="3">
-                <Button Command="{Binding LoginCommand}" Text="Login"
-                        TextColor="Blue" FontAttributes="Bold" FontSize="Large"
-                        BackgroundColor="DarkBlue"/>
+                <Button Command="{Binding LoginCommand}" Text="Inscription"
+                        TextColor="Black" FontAttributes="Bold" BackgroundColor="Lavender"/>
             </Grid>
         </Grid>
     </ContentPage.Content>

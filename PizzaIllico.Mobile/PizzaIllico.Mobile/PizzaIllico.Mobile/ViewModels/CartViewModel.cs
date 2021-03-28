@@ -7,6 +7,7 @@ using PizzaIllico.Mobile.Dtos.Pizzas;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Threading.Tasks;
+using Storm.Mvvm.Services;
 
 namespace PizzaIllico.Mobile.ViewModels
 {
@@ -39,6 +40,7 @@ namespace PizzaIllico.Mobile.ViewModels
         public ICommand RemovePizzaCommand { get; }
         public ICommand EmptyListCommand { get; }
         public ICommand OrderCommand { get; }
+        public ICommand HistoryCommand { get; }
 
         public CartViewModel()
         {
@@ -47,17 +49,24 @@ namespace PizzaIllico.Mobile.ViewModels
             RemovePizzaCommand = new Command<PizzaItem>(RemovePizzaAction);
             EmptyListCommand = new Command(EmptyListAction);
             OrderCommand = new Command(OrderAction);
+            HistoryCommand = new Command(HistoryAction);
         }
 
         private void OrderAction()
         {
             if (Pizzas.Count != 0)
                 OrderConfirmation();
+        } 
+        
+        private void HistoryAction()
+        {
+            INavigationService navigationService = DependencyService.Get<INavigationService>();
+            navigationService.PushAsync(new Pages.HistoryPage());
         }
 
         private async void OrderConfirmation()
         {
-            bool answer = await Application.Current.MainPage.DisplayAlert("Confirmation", "Order now ?", "Yes", "No");
+            bool answer = await Application.Current.MainPage.DisplayAlert("Confirmation", "Commander ?", "Oui", "Non");
             if (answer)
             {
                 cart.Order();

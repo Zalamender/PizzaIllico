@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using PizzaIllico.Mobile.Dtos;
-using PizzaIllico.Mobile.Dtos.Pizzas;
 using PizzaIllico.Mobile.Services;
 using Storm.Mvvm;
 using Xamarin.Forms;
-using System.ComponentModel;
-using PizzaIllico.Mobile.Dtos.Accounts;
 using PizzaIllico.Mobile.Dtos.Authentications;
 using PizzaIllico.Mobile.Dtos.Authentications.Credentials;
-using PizzaIllico.Mobile.Pages;
+using Storm.Mvvm.Services;
 
 namespace PizzaIllico.Mobile.ViewModels
 {
@@ -64,17 +58,29 @@ namespace PizzaIllico.Mobile.ViewModels
                 return new Command(loginUser);
             }
         }
+        public Command RegisterCommand
+        {
+            get
+            {
+                return new Command(registerUser);
+            }
+        }
+        private async void registerUser()
+        {
+
+            INavigationService navigationService = DependencyService.Get<INavigationService>();
+            await navigationService.PushAsync(new Pages.RegisterPage());
+        }
 
         private async void loginUser()
         {
             if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(Password))
             {
-                App.Current.MainPage.DisplayAlert("Erreur", "Un des champs obligatoire est vide.", "OK");
-                Console.WriteLine("TestVIDE");
+                await App.Current.MainPage.DisplayAlert("Erreur", "Un des champs obligatoire est vide.", "Ok !");
             }
             else
             {
-                LoginWithCredentialsRequest userLog = new LoginWithCredentialsRequest
+                LoginWithCredentialsRequest userLog = new()
                 {
                     ClientId = "MOBILE",
                     ClientSecret = "UNIV",
@@ -85,25 +91,20 @@ namespace PizzaIllico.Mobile.ViewModels
                 IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
                 Response<LoginResponse> response = await service.Login(userLog);
 
-                Console.WriteLine($"Appel HTTP : {response.IsSuccess}");
-
                 if (response.IsSuccess)
                 {
                     Console.WriteLine("CONNEXION REUSSIE");
-                    //  Console.WriteLine($"Appel HTTP : {response.Data.Count}");
                     User user = User.getInstance();
-                    user.configure(this.Login, this.Password, response.Data.RefreshToken, response.Data.AccessToken);
-                    Application.Current.MainPage = new MainPage();
-                    Console.WriteLine("LOLPREMIER" + User.getInstance().getAccessToken());
-                    Console.WriteLine("LOLTESTPREMIER" + User.getInstance().getUsername());
+                    user.configure(response.Data.RefreshToken, response.Data.AccessToken);
+                    INavigationService navigationService = DependencyService.Get<INavigationService>();
+                    await navigationService.PushAsync(new Pages.MainPage());
                 }
                 else
                 {
                     Console.WriteLine("CONNEXION ECHEC");
-                    App.Current.MainPage.DisplayAlert("Erreur", "Votre identifiant et/ou votre mot de passe est incorrect. ", "OK");
+                    await App.Current.MainPage.DisplayAlert("Erreur", "Votre identifiant et/ou votre mot de passe est incorrect. ", "Ok !");
                 }
             }
-
         }
     }
 }

@@ -11,6 +11,7 @@ using Xamarin.Forms;
 using System.ComponentModel;
 using PizzaIllico.Mobile.Dtos.Accounts;
 using PizzaIllico.Mobile.Dtos.Authentications;
+using Storm.Mvvm.Services;
 
 namespace PizzaIllico.Mobile.ViewModels
 {
@@ -95,44 +96,47 @@ namespace PizzaIllico.Mobile.ViewModels
         {
             get
             {
-                return new Command(createUser);
+                return new Command(CreateUser);
             }
         }
 
-        private async void createUser()
+        private async void CreateUser()
         {
-            if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
-            {
-                App.Current.MainPage.DisplayAlert("Error", "Please enter your username and password.", "OK");
-                Console.WriteLine("TestVIDE");
-            }
+            if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(FirstName) 
+                || string.IsNullOrEmpty(LastName) || string.IsNullOrEmpty(PhoneNumber) || string.IsNullOrEmpty(Password))
+                await App.Current.MainPage.DisplayAlert("Erreur", "Un des champs obligatoire est vide.", "Ok !");
             else
             {
-                CreateUserRequest user = new CreateUserRequest
+                if (Password.Length < 8)
                 {
-                    ClientId = "MOBILE",
-                    ClientSecret = "UNIV",
-                    Email = _email,
-                    FirstName=this.FirstName,
-                    LastName=this.LastName,
-                    PhoneNumber=this.PhoneNumber,
-                    Password=this.Password
-                };
-                IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
-                Response<LoginResponse> response = await service.Register(user);
-
-                Console.WriteLine($"Appel HTTP : {response.IsSuccess}");
-
-                if (response.IsSuccess)
+                    await App.Current.MainPage.DisplayAlert("Erreur", "Votre mot de passe doit contenir 8 caractères.", "Ok !");
+                }
+                else
                 {
-                    //  Console.WriteLine($"Appel HTTP : {response.Data.Count}");
+                    CreateUserRequest user = new ()
+                    {
+                        ClientId = "MOBILE",
+                        ClientSecret = "UNIV",
+                        Email = _email,
+                        FirstName = this.FirstName,
+                        LastName = this.LastName,
+                        PhoneNumber = this.PhoneNumber,
+                        Password = this.Password
+                    };
+                    IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
+                    Response<LoginResponse> response = await service.Register(user);
 
+                    if (response.IsSuccess)
+                    {
+                        await App.Current.MainPage.DisplayAlert("Inscription", "Votre inscription est effective ! Vous pouvez maintenant vous connecter.",
+                            "Ok !");
+                        INavigationService navigationService = DependencyService.Get<INavigationService>();
+                        await navigationService.PushAsync(new Pages.LoginPage());
+
+                    }
                 }
             }
 
         }
     }
 }
-      
-    
-

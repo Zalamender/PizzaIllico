@@ -1,8 +1,10 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using PizzaIllico.Mobile.Dtos;
 using PizzaIllico.Mobile.Dtos.Pizzas;
+using PizzaIllico.Mobile.Services;
 using Xamarin.Forms;
 
 namespace PizzaIllico.Mobile.ViewModels
@@ -12,11 +14,12 @@ namespace PizzaIllico.Mobile.ViewModels
      */
     public sealed class Cart
     {
-        private static Lazy<Cart> cart = new Lazy<Cart>(()=> new Cart());
+        private static Lazy<Cart> cart = new Lazy<Cart>(() => new Cart());
         private ObservableCollection<PizzaItem> pizzaList = new ObservableCollection<PizzaItem>();
         private Dictionary<long, List<PizzaItem>> orderPreparator;
 
-        private Cart() {
+        private Cart()
+        {
             pizzaList = new ObservableCollection<PizzaItem>();
             orderPreparator = new Dictionary<long, List<PizzaItem>>();
         }
@@ -26,7 +29,7 @@ namespace PizzaIllico.Mobile.ViewModels
             return cart.Value;
         }
 
-        public void AddPizza(PizzaItem pizza,long idShop)
+        public void AddPizza(PizzaItem pizza, long idShop)
         {
             pizzaList.Add(pizza);
             if (orderPreparator.ContainsKey(idShop))
@@ -43,7 +46,7 @@ namespace PizzaIllico.Mobile.ViewModels
         public void RemovePizza(PizzaItem pizza)
         {
             pizzaList.Remove(pizza);
-            foreach(KeyValuePair<long,List<PizzaItem>> pair in orderPreparator)
+            foreach (KeyValuePair<long, List<PizzaItem>> pair in orderPreparator)
             {
                 if (pair.Value.Contains(pizza))
                 {
@@ -66,26 +69,35 @@ namespace PizzaIllico.Mobile.ViewModels
         public void Order()
         {
             List<long> ids;
-            foreach(KeyValuePair<long,List<PizzaItem>> pair in orderPreparator)
+            foreach (KeyValuePair<long, List<PizzaItem>> pair in orderPreparator)
             {
                 ids = new List<long>();
-                foreach(PizzaItem pizza in pair.Value)
+                foreach (PizzaItem pizza in pair.Value)
                 {
                     ids.Add(pizza.Id);
                 }
-                OrderRequest(pair.Key,ids);
+                OrderRequest(pair.Key, ids);
             }
         }
         // Add order on api
         private async void OrderRequest(long idShop, List<long> ids)
         {
-            //await throw new NotImplementedException();
-            //Application.Current.MainPage.DisplayAlert("Success", "Order placed !","Ok");
+            CreateOrderRequest orderRequest = new()
+            {
+                PizzaIds = ids
+            };
+            IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
+            Response<OrderItem> response = await service.Order(idShop, orderRequest); ;
+            if (response.IsSuccess)
+            {
+                await App.Current.MainPage.DisplayAlert("Commande", "Votre commande a été effectué !", "Ok !");
+                EmptyList();
+            }
         }
 
-        public ObservableCollection<PizzaItem> getPizzaList()
-        {
-            return pizzaList;
-        }
+    public ObservableCollection<PizzaItem> getPizzaList()
+    {
+        return pizzaList;
     }
+}
 }

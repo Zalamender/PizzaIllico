@@ -13,14 +13,15 @@ namespace PizzaIllico.Mobile.Services
     public interface IPizzaApiService
     {
         Task<Response<List<ShopItem>>> ListShops();
-
         Task<Response<List<PizzaItem>>> ListPizzas(int shopId);
-
         Task<Response<string>> ImagePizza(int shopId, int pizzaId);
-
         Task<Response<LoginResponse>> Register(CreateUserRequest user);
         Task<Response<LoginResponse>> Login(LoginWithCredentialsRequest user);
         Task<Response> SetPassword(SetPasswordRequest password);
+        Task<Response<UserProfileResponse>> SetProfile(SetUserProfileRequest profile);
+        Task<Response<UserProfileResponse>> ProfileInfo();
+        Task<Response<OrderItem>> Order(long shopId, CreateOrderRequest orderRequest);
+        Task<Response<List<OrderItem>>> OrderHistory();
     }
     
     public class PizzaApiService : IPizzaApiService
@@ -64,6 +65,24 @@ namespace PizzaIllico.Mobile.Services
         public async Task<Response> SetPassword(SetPasswordRequest password)
         {
             return await _apiService.Patch<Response>(Urls.SET_PASSWORD, password);
+        }
+        public async Task<Response<UserProfileResponse>> SetProfile(SetUserProfileRequest profile)
+        {
+            return await _apiService.Patch<Response<UserProfileResponse>>(Urls.SET_USER_PROFILE, profile);
+        }
+        public async Task<Response<UserProfileResponse>> ProfileInfo()
+        {
+            return await _apiService.GetLogged<Response<UserProfileResponse>>(Urls.USER_PROFILE);
+        }
+
+        public async Task<Response<List<OrderItem>>> OrderHistory()
+        {
+            return await _apiService.GetLogged<Response<List<OrderItem>>>(Urls.LIST_ORDERS);
+        }
+        public async Task<Response<OrderItem>> Order(long shopId, CreateOrderRequest orderRequest)
+        {
+            string str = "{shopId}";
+            return await _apiService.PostLogged<Response<OrderItem>>(Urls.DO_ORDER.Replace(str, shopId.ToString()), orderRequest);
         }
     }
 }

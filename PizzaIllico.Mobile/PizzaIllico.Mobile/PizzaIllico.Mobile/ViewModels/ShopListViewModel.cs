@@ -32,6 +32,7 @@ namespace PizzaIllico.Mobile.ViewModels
 
 	    private void SelectedAction(ShopItem obj)
 	    {
+			Console.WriteLine("test");
 			INavigationService navigationService = DependencyService.Get<INavigationService>();
 			navigationService.PushAsync(new Pages.ShopDetailPage((int)obj.Id,obj.Name));
 		}

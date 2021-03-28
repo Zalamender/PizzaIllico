@@ -10,8 +10,7 @@
                        Title="My Cart"
                        >
     <StackLayout>
-        <ListView ItemsSource="{Binding Pizzas}"
-                  >
+        <ListView ItemsSource="{Binding Pizzas}">
             <ListView.Behaviors>
                 <extensions:ListViewItemTappedBehavior Command="{Binding RemovePizzaCommand}"/>
             </ListView.Behaviors>
@@ -19,10 +18,8 @@
                 <DataTemplate>
                     <ViewCell x:DataType="pizzas:PizzaItem">
                         <StackLayout Orientation="Vertical">
-                            <Label Text="{Binding Name}"
-                                    />
-                            <Label Text="{Binding Price, StringFormat='{0:C}'}"
-                                   />
+                            <Label Text="{Binding Name}"/>
+                            <Label Text="{Binding Price, StringFormat='{0:C}'}"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
@@ -31,8 +28,13 @@
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
             <Label Text="Total :"></Label>
             <Label Text="{Binding TotalPrice, StringFormat='{0:C}'}"></Label>
-            <Button Text="Remove all" BackgroundColor="Red" Command="{Binding EmptyListCommand}"></Button>
-            <Button Text="Order" BackgroundColor="Green" Command="{Binding OrderCommand}"></Button>
+            <Button Text="Supprimer tout" BackgroundColor="Red" Command="{Binding EmptyListCommand}"></Button>
+            <Button Text="Commander" BackgroundColor="Green" Command="{Binding OrderCommand}"></Button>
         </StackLayout>
+        <Grid Grid.Row="3">
+            <Button Command="{Binding HistoryCommand}" Text="Vos précédentes commandes"
+                        TextColor="Black" FontAttributes="Bold"
+                        BackgroundColor="Lavender"/>
+        </Grid>
     </StackLayout>
 </forms:BaseContentPage>

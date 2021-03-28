@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using PizzaIllico.Mobile.Dtos;
-using PizzaIllico.Mobile.Dtos.Pizzas;
 using PizzaIllico.Mobile.Services;
 using Storm.Mvvm;
 using Xamarin.Forms;
-using System.ComponentModel;
-using PizzaIllico.Mobile.Dtos.Accounts;
-using PizzaIllico.Mobile.Dtos.Authentications;
 using PizzaIllico.Mobile.Dtos.Authentications.Credentials;
+using PizzaIllico.Mobile.Dtos.Accounts;
+using System.Threading.Tasks;
 
 namespace PizzaIllico.Mobile.ViewModels
 {
@@ -50,68 +45,155 @@ namespace PizzaIllico.Mobile.ViewModels
             set => SetProperty(ref _passwordRequest, value);
         }
 
+        private string _email;
+
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                _email = value;
+                OnPropertyChanged("Email");
+            }
+        }
+
+        private string _firstname;
+
+        public string FirstName
+        {
+            get => _firstname;
+            set
+            {
+                _firstname = value;
+                OnPropertyChanged("FirstName");
+            }
+        }
+        private string _lastname;
+
+        public string LastName
+        {
+            get => _lastname;
+            set
+            {
+                _lastname = value;
+                OnPropertyChanged("LastName");
+            }
+        }
+        private string _phonenumber;
+
+        public string PhoneNumber
+        {
+            get => _phonenumber;
+            set
+            {
+                _phonenumber = value;
+                OnPropertyChanged("PhoneNumber");
+            }
+        }
+
+        public override async Task OnResume()
+        {
+            await base.OnResume();
+
+            IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
+
+            Response<UserProfileResponse> response = await service.ProfileInfo();
+
+            Console.WriteLine($"Appel HTTP : {response.IsSuccess}");
+            if (response.IsSuccess)
+            {
+                Console.WriteLine($"Appel HTTP : {response.Data}");
+                Email = response.Data.Email;
+                FirstName = response.Data.FirstName;
+                LastName = response.Data.LastName;
+                PhoneNumber = response.Data.PhoneNumber;
+            }
+        }
 
         public EditUserViewModel()
         {
 
         }
 
-        public Command LoginCommand
+        public Command PasswordSetCommand
         {
             get
             {
-                return new Command(editUser);
+                return new Command(EditPassword);
+            }
+        }
+        
+        public Command UserSetCommand
+        {
+            get
+            {
+                return new Command(EditUser);
             }
         }
 
-        private async void editUser()
+        private async void EditPassword()
         {
-            Console.WriteLine("LOL"+User.getInstance().getAccessToken());
-            Console.WriteLine("LOLTEST"+User.getInstance().getUsername());
             if (string.IsNullOrEmpty(OldPassword) || string.IsNullOrEmpty(NewPassword))
-            {
-                App.Current.MainPage.DisplayAlert("Erreur", "Un des champs obligatoire est vide.", "OK");
-                Console.WriteLine("TestVIDE");
-            }
+                await App.Current.MainPage.DisplayAlert("Erreur", "Un des champs obligatoire est vide.", "Ok !");
             else
             {
-                if (OldPassword.CompareTo(User.getInstance().getPassword()) == 0)
+                if (NewPassword.Length >= 8)
                 {
-                    SetPasswordRequest passwordRequest = new SetPasswordRequest
+                    SetPasswordRequest passwordRequest = new ()
                     {
                         OldPassword = this.OldPassword,
                         NewPassword = this.NewPassword
-
                     };
 
                     IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
                     Response response = await service.SetPassword(passwordRequest);
 
-                    Console.WriteLine($"Appel HTTP : {response.IsSuccess}");
-
                     if (response.IsSuccess)
                     {
-                        Console.WriteLine("CONNEXION REUSSIE");
-                        //  Console.WriteLine($"Appel HTTP : {response.Data.Count}");
-                        User user = User.getInstance();
-                        user.setPassword(NewPassword);
-
+                        await App.Current.MainPage.DisplayAlert("Succès", "Votre mot de passe a été modifié.", "Ok !");
                     }
                     else
                     {
-                        Console.WriteLine("CONNEXION ECHEC");
-                        App.Current.MainPage.DisplayAlert("Erreur", "Token invalide", "OK");
+                        Console.WriteLine("Token invalide");
+                        await App.Current.MainPage.DisplayAlert("Erreur", "Votre mot de passe est incorrect", "Ok !");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("MOT D EPASSE ANCIEN DIFFERENT");
+                    await App.Current.MainPage.DisplayAlert("Erreur", "Votre nouveau mot de passe doit contenir 8 caractères.", "Ok !");
                 }
+            }
+
+        }
+
+        private async void EditUser()
+        {
+            if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(LastName) || string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(PhoneNumber))
+                await App.Current.MainPage.DisplayAlert("Erreur", "Un des champs obligatoire est vide.", "Ok !");
+            else
+            {
+                SetUserProfileRequest userProfilRequest = new()
+                    {
+                        Email = this.Email,
+                        FirstName = this.FirstName,
+                        LastName = this.LastName,
+                        PhoneNumber = this.PhoneNumber
+                    };
+
+                    IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
+                    Response response = await service.SetProfile(userProfilRequest);
+                 Console.WriteLine(response);
+                    if (response.IsSuccess)
+                    {
+                        await App.Current.MainPage.DisplayAlert("Succès", "Votre profil a été modifié.", "Ok !");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Token invalide");
+                        await App.Current.MainPage.DisplayAlert("Erreur", "Votre connexion a expirée.", "Ok !");
+                    }
             }
 
         }
     }
 }
-
-
-
