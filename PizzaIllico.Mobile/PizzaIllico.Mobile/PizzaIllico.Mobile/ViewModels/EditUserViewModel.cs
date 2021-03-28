@@ -155,7 +155,7 @@ namespace PizzaIllico.Mobile.ViewModels
                     else
                     {
                         Console.WriteLine("Token invalide");
-                        await App.Current.MainPage.DisplayAlert("Erreur", "Votre mot de passe est incorrect", "Ok !");
+                        await App.Current.MainPage.DisplayAlert("Erreur", "Votre mot de passe est incorrect.", "Ok !");
                     }
                 }
                 else
