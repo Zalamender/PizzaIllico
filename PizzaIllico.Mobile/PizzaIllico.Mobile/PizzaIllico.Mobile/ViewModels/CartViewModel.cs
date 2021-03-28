@@ -66,7 +66,7 @@ namespace PizzaIllico.Mobile.ViewModels
 
         private async void OrderConfirmation()
         {
-            bool answer = await Application.Current.MainPage.DisplayAlert("Confirmation", "Commander ?", "Oui", "Non");
+            bool answer = await Application.Current.MainPage.DisplayAlert("Confirmation", "Êtes-vous sûr de vouloir commander ce panier ?", "Oui", "Non");
             if (answer)
             {
                 cart.Order();
@@ -99,7 +99,7 @@ namespace PizzaIllico.Mobile.ViewModels
 
         private async void RemovalConfirmation(PizzaItem obj)
         {
-            bool answer = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to remove this item from your cart.", "Yes", "No");
+            bool answer = await Application.Current.MainPage.DisplayAlert("Confirmation", "Êtes-vous sûr de vouloir retirer cette commande de votre panier ?", "Oui", "Non");
             if (answer)
             {
                 cart.RemovePizza(obj);

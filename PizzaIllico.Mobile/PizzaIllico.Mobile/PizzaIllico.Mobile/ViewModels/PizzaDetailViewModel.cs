@@ -74,7 +74,7 @@ namespace PizzaIllico.Mobile.ViewModels
 
         private async void CartAdditionSuccess()
         {
-            await Application.Current.MainPage.DisplayAlert("Pizza added", "Your order has been added to the cart.", "OK");
+            await Application.Current.MainPage.DisplayAlert("Pizza ajoutée", "Votre commande a été ajouté au panier.", "Ok !");
         }
 
         private void IncrementAction()

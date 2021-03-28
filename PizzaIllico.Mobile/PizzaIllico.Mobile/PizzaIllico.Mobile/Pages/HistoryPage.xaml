@@ -15,15 +15,16 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell x:DataType="pizzas:OrderItem">
-                        <StackLayout Orientation="Vertical">
-                            <Label Text="{Binding Shop.Name}"
-                                    />
-
-                            <Label Text="{Binding Date, StringFormat='{0:C}'}"
-                                   />
-
-                            <Label Text="{Binding Amount, StringFormat='{0:C}'}"
-                                   />
+                        <StackLayout Orientation="Vertical" HorizontalOptions="StartAndExpand" VerticalOptions ="StartAndExpand">
+                            <Label x:Name="FirstName">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0} {1} ">
+                                        <Binding Path="Shop.Name" />
+                                        <Binding Path="Date" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                            <Label Text="{Binding Amount, StringFormat='{0:C}'}"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

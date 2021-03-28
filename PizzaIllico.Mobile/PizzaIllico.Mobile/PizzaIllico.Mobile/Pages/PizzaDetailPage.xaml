@@ -18,6 +18,6 @@
             <Button Text="+" Command="{Binding IncrementCommand}"></Button>
             <Label Text="{Binding Pizza.Price, StringFormat='{0:C}'}"></Label>
         </StackLayout>
-        <Button Text="Add to cart" Command="{Binding AddCartCommand}"></Button>
+        <Button Text="Ajouter au panier" Command="{Binding AddCartCommand}"></Button>
     </StackLayout>
 </forms:BaseContentPage>

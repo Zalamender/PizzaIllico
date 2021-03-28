@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using PizzaIllico.Mobile.Dtos;
 using PizzaIllico.Mobile.Dtos.Pizzas;
 using PizzaIllico.Mobile.Services;
@@ -90,7 +89,7 @@ namespace PizzaIllico.Mobile.ViewModels
             Response<OrderItem> response = await service.Order(idShop, orderRequest); ;
             if (response.IsSuccess)
             {
-                await App.Current.MainPage.DisplayAlert("Commande", "Votre commande a été effectué !", "Ok !");
+                await App.Current.MainPage.DisplayAlert("Commande", "Votre commande a été effectuée !", "Ok !");
                 EmptyList();
             }
         }
