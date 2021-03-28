@@ -9,6 +9,7 @@ namespace PizzaIllico.Mobile.Services
     public interface IApiService
     {
         Task<TResponse> Get<TResponse>(string url);
+        Task<TResponse> Post<TResponse>(string url, String user);
     }
     
     public class ApiService : IApiService
@@ -25,6 +26,20 @@ namespace PizzaIllico.Mobile.Services
 	        string content = await response.Content.ReadAsStringAsync();
 
 	        return JsonConvert.DeserializeObject<TResponse>(content);
+        }
+
+        public async Task<TResponse> Post<TResponse>(string url, String user)
+        {         
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, HOST + url);
+
+            string json = JsonConvert.SerializeObject(user);
+            StringContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _client.PostAsync(HOST + url, httpContent);
+
+            string content = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<TResponse>(content);
         }
     }
 }

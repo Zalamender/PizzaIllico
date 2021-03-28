@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<forms:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:forms="clr-namespace:Storm.Mvvm.Forms;assembly=Storm.Mvvm.Forms"
+                       xmlns:viewModels="clr-namespace:PizzaIllico.Mobile.ViewModels;assembly=PizzaIllico.Mobile"
+                       xmlns:pizzas="clr-namespace:PizzaIllico.Mobile.Dtos.Pizzas;assembly=PizzaIllico.Mobile"
+                       xmlns:extensions="clr-namespace:PizzaIllico.Mobile.Extensions;assembly=PizzaIllico.Mobile"
+                       x:Class="PizzaIllico.Mobile.Pages.CartPage"
+                       x:DataType="viewModels:CartViewModel"
+                       Title="My Cart"
+                       >
+    <StackLayout>
+        <ListView ItemsSource="{Binding Pizzas}"
+                  >
+            <ListView.Behaviors>
+                <extensions:ListViewItemTappedBehavior Command="{Binding RemovePizzaCommand}"/>
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell x:DataType="pizzas:PizzaItem">
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="{Binding Name}"
+                                    />
+                            <Label Text="{Binding Price, StringFormat='{0:C}'}"
+                                   />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+            <Label Text="Total :"></Label>
+            <Label Text="{Binding TotalPrice, StringFormat='{0:C}'}"></Label>
+            <Button Text="Remove all" BackgroundColor="Red" Command="{Binding EmptyListCommand}"></Button>
+            <Button Text="Order" BackgroundColor="Green" Command="{Binding OrderCommand}"></Button>
+        </StackLayout>
+    </StackLayout>
+</forms:BaseContentPage>

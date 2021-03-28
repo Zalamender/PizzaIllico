@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:pages="clr-namespace:PizzaIllico.Mobile.Pages"
+            x:Class="PizzaIllico.Mobile.Pages.MainPage"
+            >
+    <!--Pour mettre la barre en bas sur la version android, ajouter ->  android.TabbedPage.ToolbarPlacement="Bottom"-->
+    <pages:ShopListPage Title="Shops"></pages:ShopListPage>
+    <pages:CartPage Title="Cart"></pages:CartPage>
+    <pages:MapPage Title="Map"></pages:MapPage>
+</TabbedPage>

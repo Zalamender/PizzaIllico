@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PizzaIllico.Mobile.Dtos;
@@ -21,37 +22,81 @@ namespace PizzaIllico.Mobile.ViewModels
             set => SetProperty(ref _pizza, value);
         }
 
-        private ImageSource _pizzaImage;
+        private string _pizzaImage;
 
-        public ImageSource PizzaImage
+        public string PizzaImage
         {
             get => _pizzaImage;
             set => SetProperty(ref _pizzaImage, value);
         }
 
+        private int _ammount;
+
+        public int Ammount
+        {
+            get => _ammount;
+            set
+            {
+                _ammount = value;
+                OnPropertyChanged("Ammount");
+            }
+        }
+
 
         private int shopId;
 
+        private Cart cart;
+
+        public ICommand IncrementCommand { get; }
+
+        public ICommand DecrementCommand { get; }
+        public ICommand AddCartCommand { get; }
 
         public PizzaDetailViewModel(PizzaItem pizza, int shopId)
         {
             this.Pizza = pizza;
             this.shopId = shopId;
+            cart = Cart.getInstance();
+            Ammount = 1;
+            AddCartCommand = new Command(AddCartAction);
+            IncrementCommand = new Command(IncrementAction);
+            DecrementCommand = new Command(DecrementAction);
+        }
+
+        private void AddCartAction()
+        {
+            for(int i = 0; i < Ammount; i++)
+            {
+                cart.AddPizza(Pizza,shopId);
+            }
+            CartAdditionSuccess();
+        }
+
+        private async void CartAdditionSuccess()
+        {
+            await Application.Current.MainPage.DisplayAlert("Pizza added", "Your order has been added to the cart.", "OK");
+        }
+
+        private void IncrementAction()
+        {
+            Ammount++;
+        }
+
+        private void DecrementAction()
+        {
+            if(Ammount != 0)
+            {
+                Ammount--;
+            }
         }
 
         public override async Task OnResume()
         {
             await base.OnResume();
 
-            IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
-
-            Response<ImageSource> response = await service.ImagePizza((int)this.Pizza.Id,shopId);
-            Console.WriteLine($"Appel HTTP : {response.IsSuccess}");
-            if (response.IsSuccess)
-            {
-                Console.WriteLine($"Appel HTTP : {response.Data}");
-                PizzaImage = (response.Data);
-            }
+            string str1 = "{shopId}";
+            string str2 = "{pizzaId}";
+            PizzaImage = "https://pizza.julienmialon.ovh/"+ Urls.GET_IMAGE.Replace(str1, shopId.ToString()).Replace(str2, Pizza.Id.ToString());
         }
     }
 }

@@ -13,7 +13,9 @@ namespace PizzaIllico.Mobile.Services
 
         Task<Response<List<PizzaItem>>> ListPizzas(int shopId);
 
-        Task<Response<ImageSource>> ImagePizza(int shopId, int pizzaId);
+        Task<Response<string>> ImagePizza(int shopId, int pizzaId);
+
+        Task<Response<List<ShopItem>>> Register();
     }
     
     public class PizzaApiService : IPizzaApiService
@@ -36,12 +38,16 @@ namespace PizzaIllico.Mobile.Services
             return await _apiService.Get<Response<List<PizzaItem>>>(Urls.LIST_PIZZA.Replace(str, shopId.ToString()));
         }
 
-        public async Task<Response<ImageSource>> ImagePizza(int shopId, int pizzaId)
+        public async Task<Response<string>> ImagePizza(int shopId, int pizzaId)
         {
             string str1 = "{shopId}";
             string str2 = "{pizzaId}";
-            return await _apiService.Get<Response<ImageSource>>(Urls.GET_IMAGE.Replace(str1, shopId.ToString()).Replace(str2, pizzaId.ToString()));
+            Console.WriteLine($"Requete effectuée :" + Urls.GET_IMAGE.Replace(str1, shopId.ToString()).Replace(str2, pizzaId.ToString()));
+            return await _apiService.Get<Response<string>>(Urls.GET_IMAGE.Replace(str1, shopId.ToString()).Replace(str2, pizzaId.ToString()));
         }
-        
+        public async Task<Response<List<ShopItem>>> Register()
+        {
+            return await _apiService.Post<Response<List<ShopItem>>>(Urls.CREATE_USER, "Test");
+        }
     }
 }

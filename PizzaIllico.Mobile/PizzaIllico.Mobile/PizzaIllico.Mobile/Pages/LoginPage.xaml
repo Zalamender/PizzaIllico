@@ -8,7 +8,41 @@
                        x:Class="PizzaIllico.Mobile.Pages.LoginPage"
                        x:DataType="viewModels:LoginViewModel"
                        Title="Login">
-    <StackLayout>
-        
-    </StackLayout>
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS, Android" Value="0,40,0,0"/>
+        </OnPlatform>
+    </ContentPage.Padding>
+    <ContentPage.Content>
+        <Grid Padding="30" RowSpacing="10" VerticalOptions="CenterAndExpand"
+            HorizontalOptions = "CenterAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <BoxView HeightRequest="10"/>
+            </Grid>
+            <Grid Grid.Row="1">
+            </Grid>
+            <Grid Grid.Row="2" WidthRequest="500">
+                <Frame HasShadow="True" BorderColor="DarkBlue">
+                    <StackLayout Orientation="Vertical" Spacing="10">
+                        <Entry x:Name="UserName" Text="{Binding Username}" TextColor="DarkBlue" Placeholder="Username"
+                               PlaceholderColor="White"/>
+                        <Entry x:Name="Password" Text="{Binding Password}" TextColor="DarkBlue" Placeholder="Password"
+                               PlaceholderColor="White" HeightRequest="40"
+                               IsPassword="True"/>
+                    </StackLayout>
+                </Frame>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Button Command="{Binding LoginCommand}" Text="Login"
+                        TextColor="Blue" FontAttributes="Bold" FontSize="Large"
+                        BackgroundColor="DarkBlue"/> 
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
 </forms:BaseContentPage>

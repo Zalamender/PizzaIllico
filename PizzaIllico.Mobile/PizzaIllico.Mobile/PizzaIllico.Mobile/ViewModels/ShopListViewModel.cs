@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PizzaIllico.Mobile.Dtos;
@@ -47,7 +48,7 @@ namespace PizzaIllico.Mobile.ViewModels
 	        if (response.IsSuccess)
 	        {
 		        Console.WriteLine($"Appel HTTP : {response.Data.Count}");
-				Shops = new ObservableCollection<ShopItem>(response.Data);
+				Shops = new ObservableCollection<ShopItem>(response.Data.OrderBy(x => x.MinutesPerKilometer));
 			}
         }
     }

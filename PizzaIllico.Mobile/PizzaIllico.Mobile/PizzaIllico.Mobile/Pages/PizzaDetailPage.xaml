@@ -11,5 +11,13 @@
                        >
     <StackLayout>
         <Image Source="{Binding PizzaImage}"></Image>
+        <Label Text="{Binding Pizza.Description}"></Label>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+            <Button Text="-" Command="{Binding DecrementCommand}"></Button>
+            <Label Text="{Binding Ammount}"></Label>
+            <Button Text="+" Command="{Binding IncrementCommand}"></Button>
+            <Label Text="{Binding Pizza.Price, StringFormat='{0:C}'}"></Label>
+        </StackLayout>
+        <Button Text="Add to cart" Command="{Binding AddCartCommand}"></Button>
     </StackLayout>
 </forms:BaseContentPage>
