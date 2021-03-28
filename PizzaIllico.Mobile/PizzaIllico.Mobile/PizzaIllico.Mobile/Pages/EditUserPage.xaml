@@ -3,11 +3,9 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                        xmlns:forms="clr-namespace:Storm.Mvvm.Forms;assembly=Storm.Mvvm.Forms"
                        xmlns:viewModels="clr-namespace:PizzaIllico.Mobile.ViewModels;assembly=PizzaIllico.Mobile"
-                       xmlns:pizzas="clr-namespace:PizzaIllico.Mobile.Dtos.Pizzas;assembly=PizzaIllico.Mobile"
-                       xmlns:extensions="clr-namespace:PizzaIllico.Mobile.Extensions;assembly=PizzaIllico.Mobile"
-                       x:Class="PizzaIllico.Mobile.Pages.LoginPage"
-                       x:DataType="viewModels:LoginViewModel"
-                       Title="Login">
+                       x:Class="PizzaIllico.Mobile.Pages.EditUserPage"
+                       x:DataType="viewModels:EditUserViewModel"
+                       Title="Edit User">
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness">
             <On Platform="iOS, Android" Value="0,40,0,0"/>
@@ -30,9 +28,9 @@
             <Grid Grid.Row="2" WidthRequest="500">
                 <Frame HasShadow="True" BorderColor="DarkBlue">
                     <StackLayout Orientation="Vertical" Spacing="10">
-                        <Entry x:Name="UserName" Text="{Binding Login}" TextColor="DarkBlue" Placeholder="Username"
+                        <Entry x:Name="UserName" Text="{Binding OldPassword}" TextColor="DarkBlue" Placeholder="Username"
                                PlaceholderColor="White"/>
-                        <Entry x:Name="Password" Text="{Binding Password}" TextColor="DarkBlue" Placeholder="Password"
+                        <Entry x:Name="Password" Text="{Binding NewPassword}" TextColor="DarkBlue" Placeholder="Password"
                                PlaceholderColor="White" HeightRequest="40"
                                IsPassword="True"/>
                     </StackLayout>
@@ -41,7 +39,7 @@
             <Grid Grid.Row="3">
                 <Button Command="{Binding LoginCommand}" Text="Login"
                         TextColor="Blue" FontAttributes="Bold" FontSize="Large"
-                        BackgroundColor="DarkBlue"/> 
+                        BackgroundColor="DarkBlue"/>
             </Grid>
         </Grid>
     </ContentPage.Content>

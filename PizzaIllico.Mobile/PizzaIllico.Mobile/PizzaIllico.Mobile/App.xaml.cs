@@ -11,7 +11,7 @@ namespace PizzaIllico.Mobile
 {
     public partial class App
     {
-        public App() : base(() => new MainPage(), RegisterServices)
+        public App() : base(() => new LoginPage(), RegisterServices)
         {
 #if DEBUG
             Log.Listeners.Add(new DelegateLogListener((arg1, arg2) => Debug.WriteLine($"{arg1} : {arg2}")));

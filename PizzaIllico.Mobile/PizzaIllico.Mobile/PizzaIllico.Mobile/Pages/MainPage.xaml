@@ -7,4 +7,5 @@
     <pages:ShopListPage Title="Shops"></pages:ShopListPage>
     <pages:CartPage Title="Cart"></pages:CartPage>
     <pages:MapPage Title="Map"></pages:MapPage>
+    <pages:EditUserPage Title="EditUser"></pages:EditUserPage>
 </TabbedPage>

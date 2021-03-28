@@ -10,21 +10,25 @@ using Storm.Mvvm;
 using Xamarin.Forms;
 using System.ComponentModel;
 using PizzaIllico.Mobile.Dtos.Accounts;
+using PizzaIllico.Mobile.Dtos.Authentications;
+using PizzaIllico.Mobile.Dtos.Authentications.Credentials;
+using PizzaIllico.Mobile.Pages;
 
 namespace PizzaIllico.Mobile.ViewModels
 {
     class LoginViewModel : ViewModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
         public ICommand SelectedCommand { get; }
 
-        private string _username;
+        private string _login;
 
-        public string Username
+        public string Login
         {
-            get => _username;
-            set { _username = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("Username"));
+            get => _login;
+            set
+            {
+                _login = value;
+                OnPropertyChanged("Login");
             }
         }
 
@@ -36,64 +40,73 @@ namespace PizzaIllico.Mobile.ViewModels
             set
             {
                 _password = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("Password"));
+                OnPropertyChanged("Password");
             }
         }
 
-        private CreateUserRequest _user;
-        public CreateUserRequest User
+        private LoginWithCredentialsRequest _userlog;
+        public LoginWithCredentialsRequest UserLog
         {
-            get => _user;
-            set => SetProperty(ref _user, value);
+            get => _userlog;
+            set => SetProperty(ref _userlog, value);
         }
 
 
         public LoginViewModel()
         {
-          
-        }
-        
-       public Command LoginCommand
-       {
-           get
-           {
-               return new Command(Login);
-           }
-       }
-      
-       private void Login()
-       {
-           if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)) {
-               App.Current.MainPage.DisplayAlert("Error", "Please enter your username and password.", "OK");
-               Console.WriteLine("TestVIDE");
-           }
-           else 
-           {
-                connexion();
-           }
-       }
 
-        /**private async void LoginCall()
+        }
+
+        public Command LoginCommand
         {
+            get
+            {
+                return new Command(loginUser);
+            }
+        }
+
+        private async void loginUser()
+        {
+            if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(Password))
+            {
+                App.Current.MainPage.DisplayAlert("Erreur", "Un des champs obligatoire est vide.", "OK");
+                Console.WriteLine("TestVIDE");
+            }
+            else
+            {
+                LoginWithCredentialsRequest userLog = new LoginWithCredentialsRequest
+                {
+                    ClientId = "MOBILE",
+                    ClientSecret = "UNIV",
+                    Login = this.Login,
+                    Password = this.Password
+                };
+
+                IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
+                Response<LoginResponse> response = await service.Login(userLog);
+
+                Console.WriteLine($"Appel HTTP : {response.IsSuccess}");
+
+                if (response.IsSuccess)
+                {
+                    Console.WriteLine("CONNEXION REUSSIE");
+                    //  Console.WriteLine($"Appel HTTP : {response.Data.Count}");
+                    User user = User.getInstance();
+                    user.configure(this.Login, this.Password, response.Data.RefreshToken, response.Data.AccessToken);
+                    Application.Current.MainPage = new MainPage();
+                    Console.WriteLine("LOLPREMIER" + User.getInstance().getAccessToken());
+                    Console.WriteLine("LOLTESTPREMIER" + User.getInstance().getUsername());
+                }
+                else
+                {
+                    Console.WriteLine("CONNEXION ECHEC");
+                    App.Current.MainPage.DisplayAlert("Erreur", "Votre identifiant et/ou votre mot de passe est incorrect. ", "OK");
+                }
+            }
 
         }
-         **/
-
-        public async Task connexion()
-       {
- 
-           IPizzaApiService service = DependencyService.Get<IPizzaApiService>();
-           Response<List<ShopItem>> response = await service.Register();
-
-           Console.WriteLine($"Appel HTTP : {response.IsSuccess}");
-
-           if (response.IsSuccess)
-           {
-               Console.WriteLine($"Appel HTTP : {response.Data.Count}");
-              
-               }
-           }
-       }
-      
-    
+    }
 }
+
+
+
